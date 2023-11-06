@@ -1,0 +1,3 @@
+This is the README file for lab2
+
+More information to come...
