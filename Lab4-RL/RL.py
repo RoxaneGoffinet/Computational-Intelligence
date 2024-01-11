@@ -8,7 +8,7 @@ class RLearning:
         self.Q = defaultdict(float)
         self.alpha = alpha
         self.epsilon = epsilon
-        self.d = d
+        self.d = d 
 
     def get_Q(self, state, action):
         state_key = (tuple(state.x), tuple(state.o))
@@ -34,7 +34,7 @@ class RLearning:
 
 
 def fitness(pos: State, player):
-    """Evaluate state: +1 first player wins"""
+    """ Evaluate state: +1 first player wins """
     if check_win(pos.x):
         if player == 'x':
             return 1
