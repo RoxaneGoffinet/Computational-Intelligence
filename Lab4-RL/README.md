@@ -1,0 +1,6 @@
+# Lab 4 : Reinforcement Leaarning
+
+In this repositery wou will find everything used for the elaboration of an RL algorithm in the Lab 4 (ex lab 10).
+
+The file **Game functions.py** contains all becessary game functions, it hasn't be changed from the repository of the professor. 
+My implementation can be seen in **lab10-2.ipynb** 
