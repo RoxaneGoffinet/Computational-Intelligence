@@ -3,33 +3,32 @@ from copy import deepcopy
 from enum import Enum
 import numpy as np
 
-# Rules on PDF
-
 
 class Move(Enum):
-    '''
+    """
     Selects where you want to place the taken piece. The rest of the pieces are shifted
-    '''
-    TOP = 0
+    """
+
+    TOP = 0  # quando prendi un pezzo allora spingi la colonna in basso e metti il pezzo sopra
     BOTTOM = 1
-    LEFT = 2
+    LEFT = 2  # quando prendi un pezzo allora spingi la riga sulla destra e metti il pezzo a sinistra
     RIGHT = 3
 
 
 class Player(ABC):
     def __init__(self) -> None:
-        '''You can change this for your player if you need to handle state/have memory'''
+        """You can change this for your player if you need to handle state/have memory"""
         pass
 
     @abstractmethod
-    def make_move(self, game: 'Game') -> tuple[tuple[int, int], Move]:
-        '''
+    def make_move(self, game: "Game") -> tuple[tuple[int, int], Move]:
+        """
         The game accepts coordinates of the type (X, Y). X goes from left to right, while Y goes from top to bottom, as in 2D graphics.
         Thus, the coordinates that this method returns shall be in the (X, Y) format.
 
         game: the Quixo game. You can use it to override the current game with yours, but everything is evaluated by the main game
         return values: this method shall return a tuple of X,Y positions and a move among TOP, BOTTOM, LEFT and RIGHT
-        '''
+        """
         pass
 
 
@@ -95,7 +94,6 @@ class Game(object):
             while not ok:
                 from_pos, slide = players[self.current_player_idx].make_move(
                     self)
-                
                 ok = self.__move(from_pos, slide, self.current_player_idx)
             winner = self.check_winner()
         return winner
@@ -211,3 +209,76 @@ class Game(object):
                 self._board[(self._board.shape[0] - 1, from_pos[1])] = piece
         return acceptable
     
+
+class BetterGame(Game):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def best_sequence(self) -> int:
+        """ This function is designed to return the length of the longest sequence of the given player on the board."""
+        board = self.get_board()
+        best_sequence = 0
+        for i in range(5):
+            for j in range(5):
+                if board[i][j] == self.current_player_idx:
+                    
+                    # row
+                    sequence = 0
+                    for k in range(j, board.shape[1]):
+                        if board[i][k] == self.current_player_idx:
+                            sequence += 1
+                        else:
+                           sequence
+                    best_sequence = max(best_sequence, sequence)
+
+                    # column
+                    sequence = 0
+                    for k in range(i, board.shape[0]):
+                        if board[k][j] == self.current_player_idx:
+                            sequence += 1
+                        else:
+                            sequence = 0
+                    best_sequence = max(best_sequence, sequence)
+
+                    # diagonal 
+                    sequence = 0
+                    for k in range(i, board.shape[0]):
+                        if j + k - i < board.shape[1]:
+                            if board[k][j + k - i] == self.current_player_idx:
+                                sequence += 1
+                            else:
+                                sequence = 0
+                    best_sequence = max(best_sequence, sequence)
+
+                    # anti-diagonal sequence
+                    sequence = 0
+                    for k in range(i, board.shape[0]):
+                        if j - k + i >= 0:
+                            if board[k][j - k + i] == self.current_player_idx:
+                                sequence += 1
+                            else:
+                                sequence = 0
+                    best_sequence = max(best_sequence, sequence)
+        return best_sequence
+    
+
+
+    def print(self):
+        """ This function is designed to print the board of the current game."""
+        b = [["" for _ in range(self._board.shape[0])] for _ in range(self._board.shape[1])]
+        for row in range(self._board.shape[0]):
+                for col in range(self._board.shape[1]):
+                    if self._board[row][col] == 1:
+                        b[row][col] = "O"
+                    elif self._board[row][col] == 0:
+                        b[row][col] = "X"
+                    else:
+                        b[row][col] = "."
+        for i in b:
+                print(i)
+
+
+    def move(self, from_pos: tuple[int, int], slide: Move, player_id: int) -> bool:
+        """ This function is designed to make a move on the board of the current game."""
+        return self._Game__move(from_pos, slide, player_id)
