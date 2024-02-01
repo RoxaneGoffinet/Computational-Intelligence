@@ -6,12 +6,16 @@ You will be able to find labs or projects in relation with optimization, pathsea
 The file **Report_Computational_Intelligence** contains explications on everything that I have done on this course.
 
 ## Lab1
+A* algorithm
 
 ## Lab2
+NIM - ES
 
 ## Halloween challenge
+Hill Climbing and Simulated annealing
 
 ## Lab3
+Evolutionnary strategies / Genetic algorithms
 
 ## Lab4
 Designing a RL Player
