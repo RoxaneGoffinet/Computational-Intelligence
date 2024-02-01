@@ -263,7 +263,6 @@ class BetterGame(Game):
         return best_sequence
     
 
-
     def print(self):
         """ This function is designed to print the board of the current game."""
         b = [["" for _ in range(self._board.shape[0])] for _ in range(self._board.shape[1])]
@@ -282,3 +281,4 @@ class BetterGame(Game):
     def move(self, from_pos: tuple[int, int], slide: Move, player_id: int) -> bool:
         """ This function is designed to make a move on the board of the current game."""
         return self._Game__move(from_pos, slide, player_id)
+    

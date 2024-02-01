@@ -1,5 +1,5 @@
-from game2 import *
 from copy import deepcopy
+from game import *
 
 class MinmaxPlayer(Player):
     def __init__(self, depth) -> None:
@@ -7,9 +7,27 @@ class MinmaxPlayer(Player):
         self.depth = depth
         self.board_size = 5
 
-    def all_possible_moves(self, player_id: int, board) -> list[list[tuple[int, int], Move]]:
+
+
+    def all_possible_moves(self, game: "BetterGame") -> list[tuple[tuple[int, int], Move]]:
+        possible_moves = []
+        for x in range(5):
+            for y in range(5):
+              if x>=1 and x <= 4 and y>=1 and y<4 :  # to skip internal cubes
+                continue
+
+              for move in [Move.TOP, Move.BOTTOM, Move.LEFT, Move.RIGHT]:
+                  if game.is_valid((x, y), move, game.current_player_idx):
+                      possible_moves.append(((x, y), move))
+
+        return possible_moves
+ 
+
+    def all_possible_moves(self, game) -> list[list[tuple[int, int], Move]]:
             '''This function returns all the possible moves that can be done by a player in a given board'''
 
+            board = game.get_board()
+            player_id = game.current_player_idx
             all_possible_moves = []
             for row in range(5):
                 for col in range(5):
@@ -58,7 +76,6 @@ class MinmaxPlayer(Player):
                             all_possible_moves.append([(row, col), Move.RIGHT])
 
             return all_possible_moves
-
     
 
     def heuristic(self, game: "BetterGame") -> int:
@@ -76,10 +93,11 @@ class MinmaxPlayer(Player):
     def minmax(self, game: "BetterGame", depth, is_max) -> int:
         """ This function is designed to return the best move that can be done by the current player."""
 
+
         if game.check_winner() != -1 or depth >= self.depth:
             return self.heuristic(game)
 
-        possible_moves = self.all_possible_moves(game.current_player_idx, game.get_board())
+        possible_moves = self.all_possible_moves(game)
         
         if is_max:  # Maximizer
             best_score = float("-inf")
@@ -89,6 +107,7 @@ class MinmaxPlayer(Player):
                 game_new.move(move[0], move[1], player)
                 current_score = self.minmax(game_new, depth + 1, False)
                 best_score = max(current_score, best_score)
+  
             return best_score
         else:                # Minimizer
             best_score = float("inf")
@@ -103,10 +122,10 @@ class MinmaxPlayer(Player):
 
     def make_move(self, game: "BetterGame") -> tuple[tuple[int, int], Move]:
         """ This function is designed to return the best move that can be done by the current player."""
-
         best_score = float("-inf")
         best_move = None
-        possible_moves = self.all_possible_moves(game.current_player_idx, game.get_board())
+        possible_moves = self.all_possible_moves(game)
+        print(len(possible_moves))
         for move in possible_moves:
             game_new = deepcopy(game)
             game_new.move(move[0], move[1], game_new.current_player_idx)
@@ -114,5 +133,4 @@ class MinmaxPlayer(Player):
             if current_score > best_score: # we keep the move with the best minmax score
                 best_score = current_score
                 best_move = move
-
         return best_move[0], best_move[1]
