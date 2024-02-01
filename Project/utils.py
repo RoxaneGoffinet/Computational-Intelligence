@@ -35,6 +35,6 @@ def print_statsMMRL(win_RL, win_MM, nb_games, title):
     print("  - Number of wins of MinMax Player: {}".format(win_MM))
     print("  - Number of draws: {}".format(nb_games - win_MM - win_RL))
  
-    plt.pie([ratio_win_RL, ratio_draw, ratio_win_MM], labels=["Wins RL", "Wins MM", "Draws"], autopct="%1.1f%%")
+    plt.pie([ratio_win_RL, ratio_draw, ratio_win_MM], labels=["Wins RL", "Draws", "Wins MM"])
     plt.title(title)
     plt.show()
